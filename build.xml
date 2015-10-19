@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="wificrack" default="all">
+  
+  
+  <property file="build.properties"/>
+  <!-- Uncomment the following property if no tests compilation is needed -->
+  <!-- 
+  <property name="skip.tests" value="true"/>
+   -->
+  
+  <!-- Compiler options -->
+  
+  <property name="compiler.debug" value="on"/>
+  <property name="compiler.generate.no.warnings" value="off"/>
+  <property name="compiler.args" value=""/>
+  <property name="compiler.max.memory" value="700m"/>
+  <patternset id="ignored.files">
+    <exclude name="**/*.hprof/**"/>
+    <exclude name="**/*.pyc/**"/>
+    <exclude name="**/*.pyo/**"/>
+    <exclude name="**/*.rbc/**"/>
+    <exclude name="**/*~/**"/>
+    <exclude name="**/.DS_Store/**"/>
+    <exclude name="**/.bundle/**"/>
+    <exclude name="**/.git/**"/>
+    <exclude name="**/.hg/**"/>
+    <exclude name="**/.svn/**"/>
+    <exclude name="**/.tox/**"/>
+    <exclude name="**/CVS/**"/>
+    <exclude name="**/RCS/**"/>
+    <exclude name="**/SCCS/**"/>
+    <exclude name="**/__pycache__/**"/>
+    <exclude name="**/_svn/**"/>
+    <exclude name="**/rcs/**"/>
+    <exclude name="**/vssver.scc/**"/>
+    <exclude name="**/vssver2.scc/**"/>
+  </patternset>
+  <patternset id="library.patterns">
+    <include name="*.zip"/>
+    <include name="*.apk"/>
+    <include name="*.war"/>
+    <include name="*.egg"/>
+    <include name="*.ear"/>
+    <include name="*.ane"/>
+    <include name="*.swc"/>
+    <include name="*.jar"/>
+  </patternset>
+  <patternset id="compiler.resources">
+    <exclude name="**/?*.java"/>
+    <exclude name="**/?*.form"/>
+    <exclude name="**/?*.class"/>
+    <exclude name="**/?*.groovy"/>
+    <exclude name="**/?*.scala"/>
+    <exclude name="**/?*.flex"/>
+    <exclude name="**/?*.kt"/>
+    <exclude name="**/?*.clj"/>
+    <exclude name="**/?*.aj"/>
+  </patternset>
+  
+  <!-- JDK definitions -->
+  
+  <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
+  <path id="jdk.classpath.1.8">
+    <fileset dir="${jdk.home.1.8}">
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/jfr.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/charsets.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/ext/jfxrt.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/localedata.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/sunpkcs11.jar"/>
+    </fileset>
+  </path>
+  
+  <property name="project.jdk.home" value="${jdk.home.1.8}"/>
+  <property name="project.jdk.bin" value="${jdk.bin.1.8}"/>
+  <property name="project.jdk.classpath" value="jdk.classpath.1.8"/>
+  
+  
+  <!-- Project Libraries -->
+  
+  <path id="library.jni.classpath"/>
+  
+  <!-- Modules -->
+  
+  
+  <!-- Module wificrack -->
+  
+  <dirname property="module.wificrack.basedir" file="${ant.file}"/>
+  
+  
+  <property name="module.jdk.home.wificrack" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.wificrack" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.wificrack" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.wificrack" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+  
+  <property name="output.dir" value="${module.wificrack.basedir}/out"/>
+  <property name="wificrack.output.dir" value="${module.wificrack.basedir}/out/production/wificrack"/>
+  <property name="wificrack.testoutput.dir" value="${module.wificrack.basedir}/out/test/wificrack"/>
+  
+  <path id="wificrack.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="wificrack.module.production.classpath">
+    <path refid="${module.jdk.classpath.wificrack}"/>
+    <path refid="library.jni.classpath"/>
+  </path>
+  
+  <path id="wificrack.runtime.production.module.classpath">
+    <pathelement location="${wificrack.output.dir}"/>
+    <path refid="library.jni.classpath"/>
+  </path>
+  
+  <path id="wificrack.module.classpath">
+    <path refid="${module.jdk.classpath.wificrack}"/>
+    <pathelement location="${wificrack.output.dir}"/>
+    <path refid="library.jni.classpath"/>
+  </path>
+  
+  <path id="wificrack.runtime.module.classpath">
+    <pathelement location="${wificrack.testoutput.dir}"/>
+    <pathelement location="${wificrack.output.dir}"/>
+    <path refid="library.jni.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.wificrack">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.wificrack">
+    <patternset refid="excluded.from.module.wificrack"/>
+  </patternset>
+  
+  <path id="wificrack.module.sourcepath">
+    <dirset dir="${module.wificrack.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.wificrack" depends="compile.module.wificrack.production,compile.module.wificrack.tests" description="Compile module wificrack"/>
+  
+  <target name="compile.module.wificrack.production" description="Compile module wificrack; production classes">
+    <mkdir dir="${wificrack.output.dir}"/>
+    <javac destdir="${wificrack.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.wificrack}/javac">
+      <compilerarg line="${compiler.args.wificrack}"/>
+      <bootclasspath refid="wificrack.module.bootclasspath"/>
+      <classpath refid="wificrack.module.production.classpath"/>
+      <src refid="wificrack.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.wificrack"/>
+    </javac>
+    
+    <copy todir="${wificrack.output.dir}">
+      <fileset dir="${module.wificrack.basedir}/src" includes="**/*.class">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+    <copy todir="${wificrack.output.dir}">
+      <fileset dir="${module.wificrack.basedir}/src" includes="**/*.so"/>
+    </copy>
+  </target>
+  
+  <target name="compile.module.wificrack.tests" depends="compile.module.wificrack.production" description="compile module wificrack; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.wificrack" description="cleanup module">
+    <delete dir="${wificrack.output.dir}"/>
+    <delete dir="${wificrack.testoutput.dir}"/>
+  </target>
+  
+  <target name="init" description="Build initialization">
+    <!-- Perform any build initialization in this target -->
+  </target>
+  
+  <target name="clean" depends="clean.module.wificrack, clean.artifact.wificrack:jar" description="cleanup all">
+    <delete dir="${output.dir}"/>
+  </target>
+  
+  <target name="build.modules" depends="init, clean, compile.module.wificrack" description="build all modules"/>
+  
+  <target name="init.artifacts">
+    <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
+    <property name="artifact.output.wificrack:jar" value="${basedir}/out/artifacts/wificrack_jar"/>
+    <mkdir dir="${artifacts.temp.dir}"/>
+    <property name="temp.jar.path.wificrack.jar" value="${artifacts.temp.dir}/wificrack.jar"/>
+  </target>
+  
+  <target name="clean.artifact.wificrack:jar" description="clean wificrack:jar artifact output">
+    <delete dir="${artifact.output.wificrack:jar}"/>
+  </target>
+  
+  <target name="jar" depends="init.artifacts, compile.module.wificrack" description="Build &#39;wificrack:jar&#39; artifact">
+    <mkdir dir="${artifact.output.wificrack:jar}"/>
+    <jar destfile="${temp.jar.path.wificrack.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
+      <zipfileset dir="${wificrack.output.dir}"/>
+    </jar>
+    <copy file="${temp.jar.path.wificrack.jar}" tofile="${artifact.output.wificrack:jar}/wificrack.jar"/>
+  </target>
+  
+  <target name="build.all.artifacts" depends="jar" description="Build all artifacts">
+    
+    <!-- Delete temporary files -->
+    <delete dir="${artifacts.temp.dir}"/>
+  </target>
+  
+  <target name="all" depends="build.modules, build.all.artifacts" description="build all"/>
+</project>

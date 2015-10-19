@@ -1,0 +1,7 @@
+*.o
+*.class
+*.so
+*.a
+.idea
+*.os.Linux
+out
