@@ -62,27 +62,27 @@
   <property name="jdk.bin.1.8" value="${jdk.home.1.8}/bin"/>
   <path id="jdk.classpath.1.8">
     <fileset dir="${jdk.home.1.8}">
-      <include name="jre/lib/jsse.jar"/>
-      <include name="jre/lib/jfr.jar"/>
-      <include name="jre/lib/javaws.jar"/>
-      <include name="jre/lib/jfxswt.jar"/>
-      <include name="jre/lib/rt.jar"/>
-      <include name="jre/lib/resources.jar"/>
-      <include name="jre/lib/jce.jar"/>
-      <include name="jre/lib/plugin.jar"/>
-      <include name="jre/lib/management-agent.jar"/>
-      <include name="jre/lib/deploy.jar"/>
       <include name="jre/lib/charsets.jar"/>
-      <include name="jre/lib/ext/sunjce_provider.jar"/>
-      <include name="jre/lib/ext/zipfs.jar"/>
-      <include name="jre/lib/ext/cldrdata.jar"/>
-      <include name="jre/lib/ext/nashorn.jar"/>
+      <include name="jre/lib/deploy.jar"/>
+      <include name="jre/lib/javaws.jar"/>
+      <include name="jre/lib/resources.jar"/>
+      <include name="jre/lib/rt.jar"/>
+      <include name="jre/lib/jfxswt.jar"/>
+      <include name="jre/lib/plugin.jar"/>
+      <include name="jre/lib/jsse.jar"/>
+      <include name="jre/lib/management-agent.jar"/>
+      <include name="jre/lib/jce.jar"/>
+      <include name="jre/lib/jfr.jar"/>
       <include name="jre/lib/ext/jfxrt.jar"/>
-      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/sunjce_provider.jar"/>
       <include name="jre/lib/ext/localedata.jar"/>
-      <include name="jre/lib/ext/sunec.jar"/>
-      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/zipfs.jar"/>
       <include name="jre/lib/ext/sunpkcs11.jar"/>
+      <include name="jre/lib/ext/sunec.jar"/>
+      <include name="jre/lib/ext/cldrdata.jar"/>
+      <include name="jre/lib/ext/jaccess.jar"/>
+      <include name="jre/lib/ext/dnsns.jar"/>
+      <include name="jre/lib/ext/nashorn.jar"/>
     </fileset>
   </path>
   
@@ -93,7 +93,11 @@
   
   <!-- Project Libraries -->
   
-  <path id="library.jni.classpath"/>
+  <path id="library.lib.classpath">
+    <fileset dir="${basedir}/lib">
+      <patternset refid="library.patterns"/>
+    </fileset>
+  </path>
   
   <!-- Modules -->
   
@@ -103,11 +107,11 @@
   <dirname property="module.wificrack.basedir" file="${ant.file}"/>
   
   
-  <property name="module.jdk.home.wificrack" value="${project.jdk.home}"/>
-  <property name="module.jdk.bin.wificrack" value="${project.jdk.bin}"/>
-  <property name="module.jdk.classpath.wificrack" value="${project.jdk.classpath}"/>
+  <property name="module.jdk.home.wificrack" value="${jdk.home.1.8}"/>
+  <property name="module.jdk.bin.wificrack" value="${jdk.bin.1.8}"/>
+  <property name="module.jdk.classpath.wificrack" value="jdk.classpath.1.8"/>
   
-  <property name="compiler.args.wificrack" value="-encoding UTF-8 -source 8 ${compiler.args}"/>
+  <property name="compiler.args.wificrack" value="-encoding UTF-8 -source 1.6 ${compiler.args}"/>
   
   <property name="output.dir" value="${module.wificrack.basedir}/out"/>
   <property name="wificrack.output.dir" value="${module.wificrack.basedir}/out/production/wificrack"/>
@@ -119,24 +123,24 @@
   
   <path id="wificrack.module.production.classpath">
     <path refid="${module.jdk.classpath.wificrack}"/>
-    <path refid="library.jni.classpath"/>
+    <path refid="library.lib.classpath"/>
   </path>
   
   <path id="wificrack.runtime.production.module.classpath">
     <pathelement location="${wificrack.output.dir}"/>
-    <path refid="library.jni.classpath"/>
+    <path refid="library.lib.classpath"/>
   </path>
   
   <path id="wificrack.module.classpath">
     <path refid="${module.jdk.classpath.wificrack}"/>
     <pathelement location="${wificrack.output.dir}"/>
-    <path refid="library.jni.classpath"/>
+    <path refid="library.lib.classpath"/>
   </path>
   
   <path id="wificrack.runtime.module.classpath">
     <pathelement location="${wificrack.testoutput.dir}"/>
     <pathelement location="${wificrack.output.dir}"/>
-    <path refid="library.jni.classpath"/>
+    <path refid="library.lib.classpath"/>
   </path>
   
   
@@ -150,7 +154,7 @@
   
   <path id="wificrack.module.sourcepath">
     <dirset dir="${module.wificrack.basedir}">
-      <include name="src"/>
+      <include name="src/java"/>
     </dirset>
   </path>
   
@@ -168,7 +172,7 @@
     </javac>
     
     <copy todir="${wificrack.output.dir}">
-      <fileset dir="${module.wificrack.basedir}/src" includes="**/*.class">
+      <fileset dir="${module.wificrack.basedir}/src/java" includes="**/*.class">
         <patternset refid="compiler.resources"/>
         <type type="file"/>
       </fileset>
@@ -189,7 +193,7 @@
     <!-- Perform any build initialization in this target -->
   </target>
   
-  <target name="clean" depends="clean.module.wificrack, clean.artifact.wificrack:jar" description="cleanup all">
+  <target name="clean" depends="clean.module.wificrack" description="cleanup all">
     <delete dir="${output.dir}"/>
   </target>
   
@@ -197,24 +201,34 @@
   
   <target name="init.artifacts">
     <property name="artifacts.temp.dir" value="${basedir}/__artifacts_temp"/>
-    <property name="artifact.output.wificrack:jar" value="${basedir}/out/artifacts/wificrack_jar"/>
+    <property name="artifact.output.wificrack" value="${basedir}/out/artifacts/wificrack"/>
     <mkdir dir="${artifacts.temp.dir}"/>
     <property name="temp.jar.path.wificrack.jar" value="${artifacts.temp.dir}/wificrack.jar"/>
   </target>
   
-  <target name="clean.artifact.wificrack:jar" description="clean wificrack:jar artifact output">
-    <delete dir="${artifact.output.wificrack:jar}"/>
-  </target>
-  
-  <target name="jar" depends="init.artifacts, compile.module.wificrack" description="Build &#39;wificrack:jar&#39; artifact">
-    <mkdir dir="${artifact.output.wificrack:jar}"/>
+  <target name="artifact.wificrack" depends="init.artifacts, compile.module.wificrack" description="Build &#39;wificrack&#39; artifact">
+    <property name="artifact.temp.output.wificrack" value="${artifacts.temp.dir}/wificrack"/>
+    <mkdir dir="${artifact.temp.output.wificrack}"/>
     <jar destfile="${temp.jar.path.wificrack.jar}" duplicate="preserve" filesetmanifest="mergewithoutmain">
       <zipfileset dir="${wificrack.output.dir}"/>
+      <zipfileset src="${basedir}/lib/commons-io-1.3.1.jar"/>
+      <zipfileset src="${basedir}/lib/antlr-3.4-complete.jar"/>
+      <zipfileset src="${basedir}/lib/commons-logging-1.1.jar"/>
+      <zipfileset src="${basedir}/lib/preon-el-1.1-SNAPSHOT.jar"/>
+      <zipfileset src="${basedir}/lib/preon-io-1.1-SNAPSHOT.jar"/>
+      <zipfileset src="${basedir}/lib/preon-binding-1.1-SNAPSHOT.jar"/>
+      <zipfileset src="${basedir}/lib/preon-emitter-1.1-SNAPSHOT.jar"/>
+      <zipfileset src="${basedir}/lib/pecia-1.0-20081112.075516-1.jar"/>
+      <zipfileset src="${basedir}/lib/preon-simple-archetype-1.1-SNAPSHOT.jar"/>
     </jar>
-    <copy file="${temp.jar.path.wificrack.jar}" tofile="${artifact.output.wificrack:jar}/wificrack.jar"/>
+    <copy file="${temp.jar.path.wificrack.jar}" tofile="${artifact.temp.output.wificrack}/wificrack.jar"/>
   </target>
   
-  <target name="build.all.artifacts" depends="jar" description="Build all artifacts">
+  <target name="build.all.artifacts" depends="artifact.wificrack" description="Build all artifacts">
+    <mkdir dir="${artifact.output.wificrack}"/>
+    <copy todir="${artifact.output.wificrack}">
+      <fileset dir="${artifact.temp.output.wificrack}"/>
+    </copy>
     
     <!-- Delete temporary files -->
     <delete dir="${artifacts.temp.dir}"/>
