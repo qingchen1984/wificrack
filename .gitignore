@@ -3,5 +3,7 @@
 *.so
 *.a
 .idea
+.gradle
+build
 *.os.Linux
 out

@@ -1,0 +1,61 @@
+apply plugin: 'maven'
+apply plugin: 'java'
+
+group 'org.tudelft.aircrack'
+version '1.0'
+
+sourceCompatibility = 1.5
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenLocal()
+    }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    compile fileTree(dir: 'lib', include: ['*.jar'])
+    compile 'com.google.guava:guava:16.0.1'
+}
+
+task buildNative(type: Exec, description: 'Compile native library') {
+    workingDir 'src/main/c/aircrack-ng/src/osdep'
+    commandLine 'make'
+}
+
+task buildJni(type: Exec, description: 'Compile JNI source', dependsOn: buildNative) {
+    workingDir 'src/main/c/jni'
+    commandLine "make"
+}
+
+task cleanNative(type: Exec, description: 'Clean native source') {
+    workingDir 'src/main/c/aircrack-ng/src/osdep'
+    commandLine 'make', 'clean'
+}
+
+task cleanJni(type: Exec, description: 'Clean JNI source') {
+    workingDir 'src/main/c/jni'
+    commandLine 'make', 'clean'
+}
+
+jar {
+    from('src/main/c/jni') {
+        include '**/*.so'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+clean.dependsOn(cleanNative, cleanJni)
+jar.dependsOn(buildNative, buildJni)
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository url: 'file://' + new File(System.getProperty('user.home'), '.m2/repository').absolutePath
+        }
+    }
+}
